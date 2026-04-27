@@ -23,14 +23,14 @@ with st.sidebar:
         st.session_state.present_app = "App Menu"
 
 if st.session_state.present_app == "Home":
-    st.date_input(label=" ", value="today")
+    st.time_input(label="", value="now", disabled=True)
+    st.date_input(label="", value="today", disabled=True)
 
 elif st.session_state.present_app == "Web":
     st.expander(label="Web Browser", icon="🌐", width="stretch")
     st.markdown(
         """
             <html>
-                <iframe src="https://www.duckduckgo.com", class="embedded_web"></iframe>
                 <form action="https://duckduckgo.com/" method="GET" target="_blank">
                     <input type="text" name="q" placeholder="Search DuckDuckGo...">
                     <button type="submit">Search</button>
@@ -62,11 +62,11 @@ elif st.session_state.present_app == "Wikipedia":
         )
 
 elif st.session_state.present_app == "Terminal":
-    with st.expander("Terminal", key="Terminal_exp"):
+    with st.expander("Terminal", key="Terminal_exp", expanded=True):
         st.markdown("Welcome to Browserion Terminal")
         with st.form("Welcome to Browserion Terminal"):
             terminal_input = st.text_input(label="Terminal@DefaultUser$", value="", placeholder=f"{st.session_state.get("present_dir")}", key="cmd")
+            st.form_submit_button(label="Submit")
             st.markdown(terminal_input)
 
-            if terminal_input == "cd Work":
-                dir = "Work$"
+            st.text_area(label="Cmds")
