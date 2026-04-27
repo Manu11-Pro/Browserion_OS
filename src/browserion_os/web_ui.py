@@ -1,17 +1,31 @@
 import streamlit as st
 
-with st.sidebar:
-    Home = st.button("Home", key= "Home_bt")
-    Terminal = st.button("Terminal", key= "Terminal_bt")
-    Web = st.button("Web", key="web_bt")
-    Draw_and_note = st.button("Draw & Note", key="draw_and_note_bt")
-    calc = st.button("Calculator", key="calc_bt")
-    app_menu = st.button("App Menu", key="app_menu_bt")
+if "present_app" not in st.session_state:
+    st.session_state.present_app = "Home"
 
-if Home == True:
+if "present_dir" not in st.session_state:
+    st.session_state.present_dir = "Home$"
+
+with st.sidebar:
+    if st.button("Home", key= "Home_bt") == True:
+        st.session_state.present_app = "Home"
+    if st.button("Terminal", key= "Terminal_bt") == True:
+        st.session_state.present_app = "Terminal"
+    if st.button("Web", key="web_bt") == True:
+        st.session_state.present_app = "Web"
+    if st.button("Wikipedia", key="wikipedia_bt") == True:
+        st.session_state.present_app = "Wikipedia"
+    if st.button("Draw & Note", key="draw_and_note_bt") == True:
+        st.session_state.present_app = "Draw & Note"
+    if st.button("Calculator", key="calc_bt") == True:
+        st.session_state.present_app = "Calc"
+    if st.button("App Menu", key="app_menu_bt") == True:
+        st.session_state.present_app = "App Menu"
+
+if st.session_state.present_app == "Home":
     st.date_input(label=" ", value="today")
 
-if Web == True:
+elif st.session_state.present_app == "Web":
     st.expander(label="Web Browser", icon="🌐", width="stretch")
     st.markdown(
         """
@@ -31,19 +45,28 @@ if Web == True:
         """, unsafe_allow_html=True
     )
 
-if Terminal == True:
-    with st.expander("Terminal"):
-        st.markdown("Welcome to Browserion Terminal")
-        st.text_input(label="Terminal@DefaultUser$", value="", placeholder="--help for cmd list")
+elif st.session_state.present_app == "Wikipedia":
+    with st.expander(label="Wikipedia", icon="📖", expanded=True):
+        st.markdown(
+            """
+                <html>
+                    <iframe src="https://www.wikipedia.org/", class="embedded_web"></iframe>
+                </html>
+                <style>
+                    .embedded_web{
+                        width:100vh;
+                        height:100vh;
+                    }
+                </style>
+            """, unsafe_allow_html=True
+        )
 
-# st.markdown(
-#     """
-#         <html>
-#             <iframe src="www.google.com">
-#         </html>
-#         <style?>
-#             .embedded_web{ 
-#             }
-#         </style>
-#     """
-# )
+elif st.session_state.present_app == "Terminal":
+    with st.expander("Terminal", key="Terminal_exp"):
+        st.markdown("Welcome to Browserion Terminal")
+        with st.form("Welcome to Browserion Terminal"):
+            terminal_input = st.text_input(label="Terminal@DefaultUser$", value="", placeholder=f"{st.session_state.get("present_dir")}", key="cmd")
+            st.markdown(terminal_input)
+
+            if terminal_input == "cd Work":
+                dir = "Work$"
